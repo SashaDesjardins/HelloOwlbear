@@ -3,6 +3,7 @@ import javascriptLogo from './assets/javascript.svg'
 import viteLogo from './assets/vite.svg'
 import heroImg from './assets/hero.png'
 import { setupCounter } from './counter.js'
+import OBR from "@owlbear-rodeo/sdk";
 
 document.querySelector('#app').innerHTML = `
 <section id="center">
@@ -15,7 +16,9 @@ document.querySelector('#app').innerHTML = `
     <h1>Get started</h1>
     <p>Edit <code>src/main.js</code> and save to test <code>HMR</code></p>
   </div>
+  <input type="number" id="modifier" value="">
   <button id="counter" type="button" class="counter"></button>
+  <ul id="rollHistory"></ul>
 </section>
 
 <div class="ticks"></div>
@@ -56,5 +59,34 @@ document.querySelector('#app').innerHTML = `
 <div class="ticks"></div>
 <section id="spacer"></section>
 `
+OBR.onReady(async () => {
+  try {
+    const name = await OBR.player.getName();
 
-setupCounter(document.querySelector('#counter'))
+    await loadHistory();
+
+    setupCounter(
+      document.querySelector("#counter"),
+      name
+    );
+
+  } catch (error) {
+    console.error(error);
+  }
+});
+
+
+async function loadHistory() {
+  const data = await OBR.room.getMetadata("com.HelloOwlbear.diceroller");
+  console.log("Loaded:", data);
+  const history  =data["com.HelloOwlbear.diceroller"]?.diceHistory || [];
+
+  const list = document.getElementById("rollHistory");
+
+  history.forEach(entry => {
+    const li = document.createElement("li");
+    li.textContent = `${entry.time} | ${entry.name} rolled ${entry.roll}`;
+    list.appendChild(li);
+  });
+}
+
