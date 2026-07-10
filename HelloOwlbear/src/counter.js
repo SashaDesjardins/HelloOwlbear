@@ -3,6 +3,7 @@ import OBR from "@owlbear-rodeo/sdk";
 export async function setupCounter(element,name) {
   let counter = 0;
   let currentName=name;
+  element.innerHTML = `count is ${counter}`;
   const setCounter = async (name) => {
     counter=0;
     const rolls = [];
@@ -43,7 +44,7 @@ export async function setupCounter(element,name) {
      const rollData = {
   name: name,
   roll: counter,
-  time: new Date().toISOString()
+  time: new Date().toISOString().slice(0, 19).replace("T", " ")
 };
 const data = await OBR.room.getMetadata();
 let history = data["com.HelloOwlbear.diceroller"]?.diceHistory || [];
@@ -59,5 +60,5 @@ console.log("Saved:", history);
   };
   
   element.addEventListener("click", () => setCounter(name));
-  setCounter(name);
+  
 }

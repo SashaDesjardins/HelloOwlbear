@@ -18,7 +18,10 @@ document.querySelector('#app').innerHTML = `
   </div>
   <input type="number" id="modifier" value="">
   <button id="counter" type="button" class="counter"></button>
-  <ul id="rollHistory"></ul>
+  <ul id="rollHistory">
+
+
+  </ul>
 </section>
 
 <div class="ticks"></div>
